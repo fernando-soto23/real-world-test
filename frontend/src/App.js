@@ -3,7 +3,7 @@ function App() {
   return (
     <div className="App">
       <Home />
-      <h1>hola!!como estas It's finished!!!</h1>
+      <h1>A change has changed</h1>
     </div>
   );
 }
