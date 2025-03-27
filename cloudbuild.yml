@@ -1,0 +1,32 @@
+substitutions:
+  _REPO_NAME: 'image-repo'  
+  _REGION: 'southamerica-west1'
+  
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', '-t',
+      '$_REGION-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/frontend:latest', 
+      './frontend'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      '$_REGION-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/frontend:latest'
+    ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 'deploy', 'frontend',
+      '--image', '$_REGION-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/frontend:latest',
+      '--region', '$_REGION',
+      '--platform', 'managed',
+      '--allow-unauthenticated'
+    ]
+
+timeout: '1200s'
+
+images:
+  - '$_REGION-docker.pkg.dev/${PROJECT_ID}/$_REPO_NAME/frontend:latest'
